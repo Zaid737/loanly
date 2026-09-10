@@ -1,4 +1,3 @@
-````md
 # Loanly
 
 ### Borrow smarter. Know your numbers before you borrow.
@@ -10,13 +9,13 @@ Loanly is a borrower-first loan copilot for Indian borrowers. It helps answer fo
 - **What interest rate is reasonable for me?**
 - **What EMI should I be comfortable with?**
 
-It also generates a simple **Negotiation Card** that a borrower can use when comparing lender offers.
+It also generates a simple **Negotiation Card** to help borrowers compare and negotiate lender offers.
 
 ---
 
 ## What Loanly does
 
-Loanly takes the borrower's information and produces four main outputs:
+Loanly takes the borrower's information and produces four main outputs.
 
 ### 1. Borrowing decision
 
@@ -26,20 +25,20 @@ One of:
 - **Borrow Less**
 - **Don't Borrow**
 
-The decision comes with a plain-English reason rather than just a score.
+Each decision comes with a plain-English reason instead of just a score.
 
 ### 2. Loan amount
 
 Loanly shows two ranges:
 
-- **Borrower-safe amount** — the amount the borrower should be more comfortable carrying.
-- **Lender-style amount** — a less conservative estimate for comparison.
+- **Borrower-safe amount** — a more conservative amount the borrower should be comfortable carrying.
+- **Lender-style amount** — a less conservative affordability estimate for comparison.
 
 The borrower-safe amount is the one Loanly recommends using for decision-making.
 
 ### 3. Fair rate + APR
 
-Loanly provides a **rate range**, rather than pretending there is one universally fair rate.
+Loanly provides a **rate range** instead of pretending there is one universally fair rate.
 
 It also estimates the **all-in APR**, including the assumed processing fee, so borrowers can compare more than just the headline interest rate.
 
@@ -50,7 +49,7 @@ Loanly calculates:
 - Safe monthly EMI
 - Comparison tenure
 - Stress-case EMI
-- Whether the loan still looks affordable under the stress scenario
+- Whether the loan remains affordable under the stress scenario
 
 ---
 
@@ -60,9 +59,9 @@ The main design principle is:
 
 > **AI interprets → TypeScript rules decide → AI explains**
 
-The AI is used to understand natural-language borrower responses and turn them into structured facts.
+The AI understands natural-language borrower responses and converts them into structured facts.
 
-The financial assessment itself is deterministic.
+The actual financial assessment is deterministic and handled by TypeScript.
 
 ```text
 Borrower
@@ -84,24 +83,23 @@ TypeScript assessment engine
 Results
    ↓
 Negotiation Card
-````
+```
 
-This keeps the important financial decisions transparent, testable and
-independent of LLM output.
+This keeps the important financial decisions transparent, testable, and independent of LLM output.
 
 ---
 
 ## Tech stack
 
-* **React**
-* **TypeScript**
-* **Vite**
-* **Zod**
-* **Node.js**
-* **OpenAI API**
-* **CSS**
+- **React**
+- **TypeScript**
+- **Vite**
+- **Zod**
+- **Node.js**
+- **OpenAI API**
+- **CSS**
 
-There is no database or authentication layer. The challenge is designed as a borrower self-assessment tool rather than a production lending platform.
+There is no database or authentication layer. The project is designed as a borrower self-assessment tool rather than a production lending platform.
 
 ---
 
@@ -109,9 +107,9 @@ There is no database or authentication layer. The challenge is designed as a bor
 
 ### Requirements
 
-* Node.js 22+
-* npm
-* OpenAI API key for AI intake/copilot features
+- Node.js 22+
+- npm
+- OpenAI API key for AI intake and copilot features
 
 ### 1. Install dependencies
 
@@ -121,32 +119,34 @@ npm install
 
 ### 2. Configure environment variables
 
-Create `.env`:
+Create a `.env` file in the project root:
 
 ```env
 OPENAI_API_KEY=your_api_key_here
 OPENAI_MODEL=gpt-5.6-luna
 ```
 
-### 3. Start the application
+### 3. Start the frontend
 
 ```bash
 npm run dev
 ```
 
-In another terminal, start the AI server:
-
-```bash
-npm run server
-```
-
-The Vite app will normally run on:
+The Vite app will normally run at:
 
 ```text
 http://localhost:5173
 ```
 
-The AI server runs on:
+### 4. Start the AI server
+
+In another terminal:
+
+```bash
+npm run server
+```
+
+The AI server runs at:
 
 ```text
 http://localhost:8787
@@ -172,27 +172,27 @@ npm run build
 
 ## Demo borrowers
 
-The project includes the three borrowers from the challenge:
+The project includes the three borrowers from the challenge.
 
 ### Priya
 
 Salaried software engineer in Bengaluru.
 
-* Income: ₹1.1L/month
-* Existing EMI: ₹14K
-* Credit score: 780
-* Requested amount: ₹8L
-* Purpose: Wedding
+- Income: ₹1.1L/month
+- Existing EMI: ₹14K
+- Credit score: 780
+- Requested amount: ₹8L
+- Purpose: Wedding
 
 ### Ravi
 
 Self-employed kirana business owner in Mysuru.
 
-* Income: ₹40K–₹80K/month
-* Documented annual income: ₹4.2L
-* Property: ~₹45L
-* Requested amount: ₹15L
-* Purpose: Stock + delivery vehicle
+- Income: ₹40K–₹80K/month
+- Documented annual income: ₹4.2L
+- Property: ~₹45L
+- Requested amount: ₹15L
+- Purpose: Stock + delivery vehicle
 
 Loanly should surface a **secured Loan Against Property route** for this profile.
 
@@ -200,11 +200,11 @@ Loanly should surface a **secured Loan Against Property route** for this profile
 
 Informal delivery rider and tailor in Hubballi.
 
-* Income: ₹26K–₹30K/month
-* Existing high-cost debt
-* Recent bounced payment
-* Requested amount: ₹1.5L
-* Purpose: Electric scooter
+- Income: ₹26K–₹30K/month
+- Existing high-cost debt
+- Recent bounced payment
+- Requested amount: ₹1.5L
+- Purpose: Electric scooter
 
 The combination of high-cost debt and a recent bounce is intended to produce a **Don't Borrow** outcome.
 
@@ -212,7 +212,7 @@ The combination of high-cost debt and a recent bounce is intended to produce a *
 
 ## Rules and assumptions
 
-All important lending assumptions are documented separately in:
+All important lending rules and assumptions are documented in:
 
 ```text
 RULES.md
@@ -220,42 +220,43 @@ RULES.md
 
 This includes:
 
-* FOIR assumptions
-* Cash-flow buffer
-* Income treatment
-* Rate bands
-* Credit-score adjustments
-* High-cost debt rules
-* Bounce-payment rules
-* APR assumptions
-* Stress testing
-* Product routing
-* Confidence scoring
+- FOIR assumptions
+- Cash-flow buffer
+- Income treatment
+- Rate bands
+- Credit-score adjustments
+- High-cost debt rules
+- Bounce-payment rules
+- APR assumptions
+- Stress testing
+- Product routing
+- Confidence scoring
 
-The rules are intentionally explicit about what is a **Loanly product judgement** versus external/regulatory guidance.
+The rules clearly distinguish between **Loanly product judgements** and external or regulatory guidance.
 
 ---
 
 ## Project structure
 
 ```text
-src/
-├── components/
-├── demo/
-├── engine/
-│   ├── questions/
-│   └── rules/
-├── features/
-│   ├── copilot/
-│   ├── questionnaire/
-│   └── results/
-└── types/
-
-server/
-└── index.mjs
-
-RULES.md
-README.md
+loanly/
+├── src/
+│   ├── components/
+│   ├── demo/
+│   ├── engine/
+│   │   ├── questions/
+│   │   └── rules/
+│   ├── features/
+│   │   ├── copilot/
+│   │   ├── questionnaire/
+│   │   └── results/
+│   └── types/
+├── server/
+│   └── index.mjs
+├── public/
+├── RULES.md
+├── README.md
+└── package.json
 ```
 
 ---
@@ -266,13 +267,13 @@ Loanly is **not a credit approval system**.
 
 It does not:
 
-* Pull credit bureau data
-* Verify income or documents
-* Guarantee loan approval
-* Guarantee a lender's interest rate
-* Replace lender underwriting
+- Pull credit bureau data
+- Verify income or documents
+- Guarantee loan approval
+- Guarantee a lender's interest rate
+- Replace lender underwriting
 
-It is designed to help a borrower understand their own borrowing position and negotiate more confidently.
+It is designed to help a borrower understand their borrowing position and negotiate more confidently.
 
 ---
 
@@ -281,11 +282,17 @@ It is designed to help a borrower understand their own borrowing position and ne
 If this were taken beyond the challenge, I would focus on:
 
 1. Better handling of incomplete or uncertain borrower information.
-2. More lender/product-specific rate and fee data.
+2. More lender and product-specific rate and fee data.
 3. More detailed tenure and total-cost comparisons.
 4. Stronger validation around income and existing obligations.
 5. More comprehensive automated rule and edge-case testing.
 
-The core principle would remain the same:
+The core principle would remain:
 
 > **Make lending judgement understandable to the borrower and executable by a machine.**
+>
+> Then run:
+
+git add README.md
+git commit -m "Improve project documentation"
+git push
