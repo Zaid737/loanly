@@ -1,32 +1,291 @@
-# React + TypeScript + Vite
+````md
+# Loanly
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+### Borrow smarter. Know your numbers before you borrow.
 
-Currently, two official plugins are available:
+Loanly is a borrower-first loan copilot for Indian borrowers. It helps answer four practical questions before taking a loan:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Should I borrow at all?**
+- **How much can I realistically afford?**
+- **What interest rate is reasonable for me?**
+- **What EMI should I be comfortable with?**
 
-## React Compiler
+It also generates a simple **Negotiation Card** that a borrower can use when comparing lender offers.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## What Loanly does
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Loanly takes the borrower's information and produces four main outputs:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 1. Borrowing decision
+
+One of:
+
+- **Borrow**
+- **Borrow Less**
+- **Don't Borrow**
+
+The decision comes with a plain-English reason rather than just a score.
+
+### 2. Loan amount
+
+Loanly shows two ranges:
+
+- **Borrower-safe amount** — the amount the borrower should be more comfortable carrying.
+- **Lender-style amount** — a less conservative estimate for comparison.
+
+The borrower-safe amount is the one Loanly recommends using for decision-making.
+
+### 3. Fair rate + APR
+
+Loanly provides a **rate range**, rather than pretending there is one universally fair rate.
+
+It also estimates the **all-in APR**, including the assumed processing fee, so borrowers can compare more than just the headline interest rate.
+
+### 4. EMI + stress test
+
+Loanly calculates:
+
+- Safe monthly EMI
+- Comparison tenure
+- Stress-case EMI
+- Whether the loan still looks affordable under the stress scenario
+
+---
+
+## How it works
+
+The main design principle is:
+
+> **AI interprets → TypeScript rules decide → AI explains**
+
+The AI is used to understand natural-language borrower responses and turn them into structured facts.
+
+The financial assessment itself is deterministic.
+
+```text
+Borrower
+   ↓
+AI intake / Questionnaire
+   ↓
+Structured borrower profile
+   ↓
+TypeScript assessment engine
+   ├── Affordability
+   ├── Eligibility
+   ├── Loan amount
+   ├── Fair rate
+   ├── APR
+   ├── Stress test
+   ├── Product routing
+   └── Confidence
+   ↓
+Results
+   ↓
+Negotiation Card
+````
+
+This keeps the important financial decisions transparent, testable and
+independent of LLM output.
+
+---
+
+## Tech stack
+
+* **React**
+* **TypeScript**
+* **Vite**
+* **Zod**
+* **Node.js**
+* **OpenAI API**
+* **CSS**
+
+There is no database or authentication layer. The challenge is designed as a borrower self-assessment tool rather than a production lending platform.
+
+---
+
+## Running locally
+
+### Requirements
+
+* Node.js 22+
+* npm
+* OpenAI API key for AI intake/copilot features
+
+### 1. Install dependencies
+
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### 2. Configure environment variables
+
+Create `.env`:
+
+```env
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-5.6-luna
+```
+
+### 3. Start the application
+
+```bash
+npm run dev
+```
+
+In another terminal, start the AI server:
+
+```bash
+npm run server
+```
+
+The Vite app will normally run on:
+
+```text
+http://localhost:5173
+```
+
+The AI server runs on:
+
+```text
+http://localhost:8787
+```
+
+---
+
+## Testing
+
+Run the assessment tests:
+
+```bash
+npm run test:run
+```
+
+Build the production bundle:
+
+```bash
+npm run build
+```
+
+---
+
+## Demo borrowers
+
+The project includes the three borrowers from the challenge:
+
+### Priya
+
+Salaried software engineer in Bengaluru.
+
+* Income: ₹1.1L/month
+* Existing EMI: ₹14K
+* Credit score: 780
+* Requested amount: ₹8L
+* Purpose: Wedding
+
+### Ravi
+
+Self-employed kirana business owner in Mysuru.
+
+* Income: ₹40K–₹80K/month
+* Documented annual income: ₹4.2L
+* Property: ~₹45L
+* Requested amount: ₹15L
+* Purpose: Stock + delivery vehicle
+
+Loanly should surface a **secured Loan Against Property route** for this profile.
+
+### Anita
+
+Informal delivery rider and tailor in Hubballi.
+
+* Income: ₹26K–₹30K/month
+* Existing high-cost debt
+* Recent bounced payment
+* Requested amount: ₹1.5L
+* Purpose: Electric scooter
+
+The combination of high-cost debt and a recent bounce is intended to produce a **Don't Borrow** outcome.
+
+---
+
+## Rules and assumptions
+
+All important lending assumptions are documented separately in:
+
+```text
+RULES.md
+```
+
+This includes:
+
+* FOIR assumptions
+* Cash-flow buffer
+* Income treatment
+* Rate bands
+* Credit-score adjustments
+* High-cost debt rules
+* Bounce-payment rules
+* APR assumptions
+* Stress testing
+* Product routing
+* Confidence scoring
+
+The rules are intentionally explicit about what is a **Loanly product judgement** versus external/regulatory guidance.
+
+---
+
+## Project structure
+
+```text
+src/
+├── components/
+├── demo/
+├── engine/
+│   ├── questions/
+│   └── rules/
+├── features/
+│   ├── copilot/
+│   ├── questionnaire/
+│   └── results/
+└── types/
+
+server/
+└── index.mjs
+
+RULES.md
+README.md
+```
+
+---
+
+## Important limitation
+
+Loanly is **not a credit approval system**.
+
+It does not:
+
+* Pull credit bureau data
+* Verify income or documents
+* Guarantee loan approval
+* Guarantee a lender's interest rate
+* Replace lender underwriting
+
+It is designed to help a borrower understand their own borrowing position and negotiate more confidently.
+
+---
+
+## What I would build next
+
+If this were taken beyond the challenge, I would focus on:
+
+1. Better handling of incomplete or uncertain borrower information.
+2. More lender/product-specific rate and fee data.
+3. More detailed tenure and total-cost comparisons.
+4. Stronger validation around income and existing obligations.
+5. More comprehensive automated rule and edge-case testing.
+
+The core principle would remain the same:
+
+> **Make lending judgement understandable to the borrower and executable by a machine.**
